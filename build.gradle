@@ -1,0 +1,112 @@
+plugins {
+    id 'java'
+    id 'maven'
+    id 'net.minecrell.licenser' version '0.1.1'
+    id 'net.ellune.blossom' version '1.0.1'
+    id 'checkstyle'
+}
+
+defaultTasks 'licenseFormat', 'clean', 'build'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.11'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+archivesBaseName = project.name
+version = project.version
+
+repositories {
+    jcenter()
+    maven {
+        name 'Sponge API repo'
+        url 'http://repo.spongepowered.org/maven'
+    }
+    maven {
+        name = 'minecrell-releases'
+        url = 'http://repo.minecrell.net/releases'
+    }
+    maven {
+        name 'jitpack'
+        url 'https://jitpack.io'
+    }
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+dependencies {
+    compile "org.spongepowered:spongeapi:${project.apiVersion}"
+    shade 'net.minecrell.mcstats:statslite-sponge:0.2.1'
+}
+
+jar {
+    from sourceSets.main.output
+    configurations.shade.copyRecursive().setTransitive(false).each { artifact ->
+        from (zipTree(artifact))
+    }
+}
+
+license {
+    // The project properties to use
+    ext.name = project.name
+    ext.owner = project.owner
+    ext.inceptionYear = project.inceptionYear
+    ext.currentYear = project.currentYear
+    
+    newLine = false
+
+    // The file that contains the license header
+    header = project.file('HEADER.txt')
+
+    // The source sets to apply the license to
+    sourceSets = project.sourceSets
+    
+    style.java = 'BLOCK_COMMENT'
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+task sourceJar(type: Jar) {
+    classifier = "sources"
+	from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar
+}
+
+checkstyle {
+    toolVersion = '6.15'
+    configFile = file('checkstyle.xml')
+    configProperties = [
+        "name" : project.name,
+        "owner" : project.owner,
+        "url" : project.url,
+        "year" : project.currentYear,
+        "basedir": project.projectDir,
+        "suppressions": project.file('checkstyle-suppressions.xml'),
+        "severity": 'warning'
+    ]
+}
+
+blossom {
+    replaceToken '%VERSION%', project.version, 'src/main/java/com/github/liachmodded/spongedota/Constants.java'
+}
