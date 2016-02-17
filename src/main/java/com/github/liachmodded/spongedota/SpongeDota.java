@@ -1,5 +1,5 @@
 /*
- * This file is part of MinigameCore, licensed under the MIT License (MIT).
+ * This file is part of SpongeDota, licensed under the MIT License (MIT).
  *
  * Copyright (c) 2016 - 2016 liach
  * Copyright (c) Contributors
@@ -24,12 +24,37 @@
  */
 package com.github.liachmodded.spongedota;
 
+import static com.github.liachmodded.spongedota.Constants.DEPENDENCIES;
+import static com.github.liachmodded.spongedota.Constants.PLUGIN_ID;
+import static com.github.liachmodded.spongedota.Constants.PLUGIN_NAME;
+import static com.github.liachmodded.spongedota.Constants.VERSION;
+
+import com.google.inject.Inject;
+import net.minecrell.mcstats.SpongeStatsLite;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 /**
  * The main class of Sponge Dota plugin.
  */
-@Plugin(id = "spongedota", name = "SpongeDota")
-public class SpongeDota {
+@Plugin(id = PLUGIN_ID, name = PLUGIN_NAME, version = VERSION, dependencies = DEPENDENCIES)
+public final class SpongeDota {
+
+    private static SpongeDota instance;
+
+    @Inject
+    private SpongeStatsLite statsLite;
+
+    protected SpongeDota() {
+        instance = this;
+    }
+
+    public static SpongeDota getInstance() {
+        return instance;
+    }
+
+    public void onPreInit(GamePreInitializationEvent event) {
+        this.statsLite.start();
+    }
 
 }

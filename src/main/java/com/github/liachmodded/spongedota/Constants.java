@@ -1,5 +1,5 @@
 /*
- * This file is part of MinigameCore, licensed under the MIT License (MIT).
+ * This file is part of SpongeDota, licensed under the MIT License (MIT).
  *
  * Copyright (c) 2016 - 2016 liach
  * Copyright (c) Contributors
@@ -32,6 +32,7 @@ public final class Constants {
     public static final String PLUGIN_ID = "spongedota";
     public static final String PLUGIN_NAME = "SpongeDota";
     public static final String VERSION = "%VERSION%";
+    public static final String DEPENDENCIES = "";
 
     private Constants() {
     }

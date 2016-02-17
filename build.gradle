@@ -42,6 +42,7 @@ configurations {
 dependencies {
     compile "org.spongepowered:spongeapi:${project.apiVersion}"
     shade 'net.minecrell.mcstats:statslite-sponge:0.2.1'
+    shade 'com.github.liachmodded:MinigameCore:develop-SNAPSHOT'
 }
 
 jar {
@@ -90,6 +91,7 @@ task sourceJar(type: Jar) {
 }
 
 artifacts {
+    archives sourceJar
     archives javadocJar
 }
 
