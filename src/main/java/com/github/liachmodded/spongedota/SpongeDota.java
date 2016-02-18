@@ -30,8 +30,12 @@ import static com.github.liachmodded.spongedota.Constants.PLUGIN_NAME;
 import static com.github.liachmodded.spongedota.Constants.VERSION;
 
 import com.google.inject.Inject;
+import me.flibio.minigamecore.Minigame;
 import net.minecrell.mcstats.SpongeStatsLite;
+import org.slf4j.LoggerFactory;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 /**
@@ -41,6 +45,7 @@ import org.spongepowered.api.plugin.Plugin;
 public final class SpongeDota {
 
     private static SpongeDota instance;
+    private Minigame dotaGame;
 
     @Inject
     private SpongeStatsLite statsLite;
@@ -55,6 +60,10 @@ public final class SpongeDota {
 
     public void onPreInit(GamePreInitializationEvent event) {
         this.statsLite.start();
+    }
+
+    public void onServerStart(GameStartingServerEvent event) {
+        this.dotaGame = new Minigame("dota", Sponge.getGame(), LoggerFactory.getLogger(PLUGIN_NAME));
     }
 
 }
